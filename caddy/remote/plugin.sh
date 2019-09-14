@@ -42,14 +42,6 @@ caddy_install() {
 	systemctl enable "$CADDY_SERVICE" &>/dev/null || _caddy_abort "systemd enable failed"
 }
 
-caddy_uninstall() {
-	caddy_stop "ignore errors"
-
-	systemctl disable "$CADDY_SERVICE" || true
-
-	rm -fr "$CADDY_BINARY" "$CADDY_CONFIG_DIR" "$CADDY_SSL_DIR" "$CADDY_SERVICE_FILE" &>/dev/null
-}
-
 caddy_start() {
 	local ignore_errors="$1"
 

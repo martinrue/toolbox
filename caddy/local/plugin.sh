@@ -13,10 +13,6 @@ caddy_install() {
 	_caddy_internal "${FUNCNAME[0]}"
 }
 
-caddy_uninstall() {
-	_caddy_internal "${FUNCNAME[0]}"
-}
-
 caddy_start() {
 	_caddy_internal "${FUNCNAME[0]}"
 }
