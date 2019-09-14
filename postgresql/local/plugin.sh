@@ -39,6 +39,6 @@ postgresql_create_role() {
 	_postgresql_internal "${FUNCNAME[0]}" "$@"
 }
 
-postgresql_add_role_to_db() {
+postgresql_add_role_to_database() {
 	_postgresql_internal "${FUNCNAME[0]}" "$@"
 }
