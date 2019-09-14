@@ -9,7 +9,7 @@ _nodejs_abort() {
 nodejs_install() {
 	local version="$1"
 
-	if [ -x "$(command -v node)" ]; then
+	if [[ -x "$(command -v node)" ]]; then
 		return 0
 	fi
 

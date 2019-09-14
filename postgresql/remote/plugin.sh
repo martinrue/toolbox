@@ -9,7 +9,7 @@ _postgresql_abort() {
 }
 
 postgresql_install() {
-	if [ -x "$(command -v psql)" ]; then
+	if [[ -x "$(command -v psql)" ]]; then
 		return 0
 	fi
 
@@ -53,7 +53,7 @@ postgresql_add_role_to_database() {
 postgresql_start() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl start "$POSTGRESQL_SERVICE" || true
 	else
 		systemctl start "$POSTGRESQL_SERVICE" || _postgresql_abort "start failed"
@@ -63,7 +63,7 @@ postgresql_start() {
 postgresql_stop() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl stop "$POSTGRESQL_SERVICE" || true
 	else
 		systemctl stop "$POSTGRESQL_SERVICE" || _postgresql_abort "stop failed"
@@ -73,7 +73,7 @@ postgresql_stop() {
 postgresql_restart() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl restart "$POSTGRESQL_SERVICE" || true
 	else
 		systemctl restart "$POSTGRESQL_SERVICE" || _postgresql_abort "restart failed"

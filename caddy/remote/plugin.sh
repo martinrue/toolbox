@@ -13,7 +13,7 @@ _caddy_abort() {
 }
 
 caddy_install() {
-	if [ -x "$(command -v caddy)" ]; then
+	if [[ -x "$(command -v caddy)" ]]; then
 		return 0
 	fi
 
@@ -45,7 +45,7 @@ caddy_install() {
 caddy_start() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl start "$CADDY_SERVICE" || true
 	else
 		systemctl start "$CADDY_SERVICE" || _caddy_abort "start failed"
@@ -55,7 +55,7 @@ caddy_start() {
 caddy_stop() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl stop "$CADDY_SERVICE" || true
 	else
 		systemctl stop "$CADDY_SERVICE" || _caddy_abort "stop failed"
@@ -65,7 +65,7 @@ caddy_stop() {
 caddy_restart() {
 	local ignore_errors="$1"
 
-	if [ -n "$ignore_errors" ]; then
+	if [[ -n "$ignore_errors" ]]; then
 		systemctl restart "$CADDY_SERVICE" || true
 	else
 		systemctl restart "$CADDY_SERVICE" || _caddy_abort "restart failed"
