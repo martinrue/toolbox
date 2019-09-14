@@ -6,7 +6,7 @@ _postgresql_internal() {
 	local args="$*"
 
 	belt_remote_exec <<-SCRIPT
-    source "./toolbox/postgresql/plugin.sh"
+		source "./toolbox/postgresql/plugin.sh"
 		"$cmd" $args
 	SCRIPT
 }
