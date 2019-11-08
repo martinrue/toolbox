@@ -9,7 +9,7 @@ User=prometheus
 Restart=always
 RestartSec=5
 WorkingDirectory=/prometheus/prometheus-:VERSION.linux-amd64
-ExecStart=/prometheus/prometheus-:VERSION.linux-amd64/prometheus
+ExecStart=/prometheus/prometheus-:VERSION.linux-amd64/prometheus --storage.tsdb.retention.time=30d
 
 [Install]
 WantedBy=multi-user.target
