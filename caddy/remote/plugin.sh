@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-export CADDY_BINARY="/usr/local/bin/caddy"
+export CADDY_BINARY="/usr/bin/caddy"
 export CADDY_CONFIG_DIR="/etc/caddy"
-export CADDY_SSL_DIR="/etc/ssl/caddy"
 export CADDY_SERVICE_FILE="/etc/systemd/system/caddy.service"
 export CADDY_SERVICE="caddy.service"
 
@@ -13,32 +12,39 @@ _caddy_abort() {
 }
 
 caddy_install() {
+	local tag="$1"
+	local asset="$2"
+	local url="https://github.com/caddyserver/caddy/releases/download/$tag/$asset"
+
 	if [[ -x "$(command -v caddy)" ]]; then
 		return 0
 	fi
+	
+	curl -Ls "$url" -o "/root/caddy.tar.gz" || _caddy_abort "curl failed"
 
-	(curl -s https://getcaddy.com | bash -s personal &>/dev/null) || _caddy_abort "install failed"
+	mkdir -p "/root/caddy" || _caddy_abort "mkdir failed"
+	tar -zxf "/root/caddy.tar.gz" -C "/root/caddy" &>/dev/null || _caddy_abort "tar failed"
+	mv "/root/caddy/caddy" "$CADDY_BINARY"
+	rm -rf "/root/caddy" "/root/caddy.tar.gz" 
 
-	chown root:root "$CADDY_BINARY"
+	groupadd --system caddy || _caddy_abort "groupadd failed"
+	useradd --system --gid caddy --create-home --home-dir /var/lib/caddy --shell /usr/sbin/nologin caddy || _caddy_abort "useradd failed"
+
+	chown caddy:caddy "$CADDY_BINARY"
 	chmod 755 "$CADDY_BINARY"
-
-	setcap 'cap_net_bind_service=+eip' "$CADDY_BINARY"
+	setcap 'cap_net_bind_service=+eip' "$CADDY_BINARY" || _caddy_abort "setcap failed"
 
 	mkdir -p "$CADDY_CONFIG_DIR/vhosts"
-	chown -R root:www-data "$CADDY_CONFIG_DIR"
-
-	mkdir -p "$CADDY_SSL_DIR"
-	chown -R www-data:root "$CADDY_SSL_DIR"
-	chmod 770 "$CADDY_SSL_DIR"
+	chown -R caddy:caddy "$CADDY_CONFIG_DIR"
 
 	cp "./toolbox/caddy/Caddyfile" "$CADDY_CONFIG_DIR/Caddyfile"
+	chown caddy:caddy "$CADDY_CONFIG_DIR/Caddyfile"
 
 	cp "./toolbox/caddy/caddy.service" "$CADDY_SERVICE_FILE"
 	chown root:root "$CADDY_SERVICE_FILE"
 	chmod 744 "$CADDY_SERVICE_FILE"
 
 	systemctl daemon-reload &>/dev/null || _caddy_abort "systemd reload failed"
-
 	systemctl enable "$CADDY_SERVICE" &>/dev/null || _caddy_abort "systemd enable failed"
 }
 

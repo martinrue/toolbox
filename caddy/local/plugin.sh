@@ -10,7 +10,13 @@ _caddy_internal() {
 }
 
 caddy_install() {
-	_caddy_internal "${FUNCNAME[0]}"
+	local tag="${1:-"v2.0.0"}"
+	local asset="${2:-"caddy_2.0.0_linux_amd64.tar.gz"}"
+
+	belt_remote_exec <<-SCRIPT
+		source "./toolbox/caddy/plugin.sh"
+		caddy_install "$tag" "$asset"
+	SCRIPT
 }
 
 caddy_start() {
